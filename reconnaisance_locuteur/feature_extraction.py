@@ -5,14 +5,10 @@ warnings.filterwarnings('ignore')
 
 from config import DATASET_ROOT, OUTPUT_ROOT, SAMPLE_RATE
 
-print("="*60)
-print("🎵 TEST EXTRACTION DE FEATURES")
-print("="*60)
+print(" TEST EXTRACTION DE FEATURES")
 
 def extract_robust_features(audio, sr=16000):
-    """
-    Extrait 138 features robustes pour identification vocale
-    """
+
     frame_length = int(0.025 * sr)
     hop_length = frame_length // 2
     
@@ -64,4 +60,4 @@ for video_dir in agent_path.iterdir():
 audio, sr = librosa.load(str(audio_file), sr=SAMPLE_RATE, duration=3)
 test_features = extract_robust_features(audio, sr)
 
-print(f"✅ Extraction validée: {len(test_features)} features par échantillon")
+print(f" Extraction validée: {len(test_features)} features par échantillon")

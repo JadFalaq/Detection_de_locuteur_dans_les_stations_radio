@@ -11,14 +11,10 @@ warnings.filterwarnings('ignore')
 # Import configuration
 from config import DATASET_ROOT, OUTPUT_ROOT, SAMPLE_RATE, LOW_CUTOFF, HIGH_CUTOFF
 
-print("="*60)
-print("📻 TEST SIMULATION RADIO")
-print("="*60)
+print(" TEST SIMULATION RADIO")
 
 def simulate_police_radio(audio, sr=16000, snr_db=10):
-    """
-    Simule un canal radio P25 (standard police américaine)
-    """
+
     # Filtrage bande passante 300-3000 Hz
     sos = signal.butter(8, [300, 3000], 'bandpass', fs=sr, output='sos')
     audio_filtered = signal.sosfilt(sos, audio)
@@ -79,7 +75,7 @@ plt.tight_layout()
 
 output_path = OUTPUT_ROOT / 'radio_simulation_test_agents.png'
 plt.savefig(output_path, dpi=150, bbox_inches='tight')
-print(f"✅ Graphique sauvegardé: {output_path}")
+print(f" Graphique sauvegardé: {output_path}")
 plt.show()
 
-print("✅ Simulation radio validée!")
+print(" Simulation radio validée!")

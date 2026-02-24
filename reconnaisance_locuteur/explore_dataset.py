@@ -11,7 +11,7 @@ warnings.filterwarnings('ignore')
 # Import de la configuration
 from config import DATASET_ROOT, PROJECT_ROOT
 
-print("🔍 EXPLORATION DATASET VOXCELEB")
+print(" EXPLORATION DATASET VOXCELEB")
 
 # Vérifier le chemin et explorer la structure
 if DATASET_ROOT.exists():
@@ -105,7 +105,7 @@ else:
     print(f"   3. Chemin attendu: {DATASET_ROOT}\n")
     
     # Explorer le dossier parent
-    print(f"📂 Contenu du dossier root ({PROJECT_ROOT}):")
+    print(f" Contenu du dossier root ({PROJECT_ROOT}):")
     for item in PROJECT_ROOT.iterdir():
         if item.is_dir():
             print(f"    {item.name}/")

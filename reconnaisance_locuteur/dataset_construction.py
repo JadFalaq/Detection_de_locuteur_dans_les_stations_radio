@@ -10,14 +10,10 @@ warnings.filterwarnings('ignore')
 
 from config import DATASET_ROOT, OUTPUT_ROOT, SAMPLE_RATE
 
-print("="*60)
-print("🏗️ CONSTRUCTION DU DATASET COMPLET")
-print("="*60)
+print(" CONSTRUCTION DU DATASET COMPLET")
 
 def simulate_police_radio(audio, sr=16000, snr_db=10):
-    """
-    Simule un canal radio P25
-    """
+
     sos = signal.butter(8, [300, 3000], 'bandpass', fs=sr, output='sos')
     audio_filtered = signal.sosfilt(sos, audio)
     
@@ -32,9 +28,7 @@ def simulate_police_radio(audio, sr=16000, snr_db=10):
     return librosa.util.normalize(audio_compressed)
 
 def extract_robust_features(audio, sr=16000):
-    """
-    Extrait 138 features robustes
-    """
+
     frame_length = int(0.025 * sr)
     hop_length = frame_length // 2
     
@@ -69,12 +63,10 @@ def extract_robust_features(audio, sr=16000):
 def build_complete_dataset(dataset_path, speaker_ids, 
                           max_samples_per_speaker=150,
                           snr_range=[10, 15]):
-    """
-    Construit le dataset avec augmentation de données (différents SNR)
-    """
-    print(f"\n👥 Agents: {len(speaker_ids)}")
-    print(f"📊 Max échantillons/agent: {max_samples_per_speaker}")
-    print(f"🔊 Niveaux de bruit (SNR): {snr_range} dB\n")
+
+    print(f"\n Agents: {len(speaker_ids)}")
+    print(f" Max échantillons/agent: {max_samples_per_speaker}")
+    print(f" Niveaux de bruit (SNR): {snr_range} dB\n")
     
     all_features = []
     all_labels = []
@@ -83,7 +75,7 @@ def build_complete_dataset(dataset_path, speaker_ids,
     total_processed = 0
     total_skipped = 0
     
-    for speaker_id in tqdm(speaker_ids, desc="🎙️ Traitement"):
+    for speaker_id in tqdm(speaker_ids, desc=" Traitement"):
         speaker_path = dataset_path / speaker_id
         sample_count = 0
         
@@ -134,19 +126,17 @@ def build_complete_dataset(dataset_path, speaker_ids,
     df_features['speaker_id'] = all_labels
     df_metadata = pd.DataFrame(all_metadata)
     
-    print(f"\n✅ DATASET CONSTRUIT!")
-    print(f"  {'='*50}")
-    print(f"  📊 Échantillons totaux: {len(df_features)}")
-    print(f"  👥 Agents: {df_features['speaker_id'].nunique()}")
-    print(f"  🎯 Features/échantillon: {df_features.shape[1] - 1}")
-    print(f"  ✅ Fichiers traités: {total_processed}")
-    print(f"  ⏭️  Fichiers ignorés: {total_skipped}")
-    print(f"  {'='*50}")
+    print(f"\n DATASET CONSTRUIT!")
+    print(f"   Échantillons totaux: {len(df_features)}")
+    print(f"   Agents: {df_features['speaker_id'].nunique()}")
+    print(f"   Features/échantillon: {df_features.shape[1] - 1}")
+    print(f"   Fichiers traités: {total_processed}")
+    print(f"   Fichiers ignorés: {total_skipped}")
     
-    print(f"\n📈 Top 10 agents:")
+    print(f"\n Top 10 agents:")
     print(df_features['speaker_id'].value_counts().head(10).to_string())
     
-    print(f"\n🔊 Distribution SNR:")
+    print(f"\n Distribution SNR:")
     print(df_metadata['snr_db'].value_counts().sort_index().to_string())
     
     return df_features, df_metadata
@@ -156,7 +146,7 @@ csv_path = OUTPUT_ROOT / 'selected_agents' / 'agents_list.csv'
 agents_df = pd.read_csv(csv_path)
 selected_agents = agents_df['speaker_id'].tolist()
 
-print("\n⏳ Construction du dataset (15-20 min)...\n")
+print("\n Construction du dataset (15-20 min)...\n")
 
 dataset_df, metadata_df = build_complete_dataset(
     DATASET_ROOT, 
@@ -166,7 +156,7 @@ dataset_df, metadata_df = build_complete_dataset(
 )
 
 # Sauvegarder
-print("\n💾 Sauvegarde...")
+print("\n Sauvegarde...")
 output_features = OUTPUT_ROOT / 'features'
 output_features.mkdir(exist_ok=True)
 
@@ -176,14 +166,12 @@ metadata_path = output_features / 'dataset_metadata.csv'
 dataset_df.to_csv(dataset_path, index=False)
 metadata_df.to_csv(metadata_path, index=False)
 
-print("\n✅ Fichiers CSV créés:")
+print("\n Fichiers CSV créés:")
 print(f"  - {dataset_path}")
 print(f"  - {metadata_path}")
 
-print(f"\n📦 Tailles:")
+print(f"\n Tailles:")
 print(f"  Dataset: {dataset_path.stat().st_size / 1024 / 1024:.1f} MB")
 print(f"  Metadata: {metadata_path.stat().st_size / 1024 / 1024:.1f} MB")
 
-print("\n" + "="*60)
-print("🎉 CONSTRUCTION TERMINÉE! Passez à l'entraînement")
-print("="*60)
+print(" CONSTRUCTION TERMINÉE! Passez à l'entraînement")

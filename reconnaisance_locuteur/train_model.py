@@ -14,29 +14,27 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 
 from config import OUTPUT_ROOT
 
-print("\n" + "="*70)
-print("🎓 SECTION 6 : ENTRAÎNEMENT DU MODÈLE")
-print("="*70)
+print(" SECTION 6 : ENTRAÎNEMENT DU MODÈLE")
 
 # ========================================
 # 1. CHARGEMENT DATASET
 # ========================================
 
-print("\n📂 Chargement du dataset...")
+print("\n Chargement du dataset...")
 dataset_path = OUTPUT_ROOT / 'features' / 'police_radio_dataset.csv'
 
 if not dataset_path.exists():
-    print(f"❌ Dataset introuvable: {dataset_path}")
+    print(f" Dataset introuvable: {dataset_path}")
     exit(1)
 
 dataset_df = pd.read_csv(dataset_path)
-print(f"✅ Chargé: {len(dataset_df)} échantillons")
+print(f" Chargé: {len(dataset_df)} échantillons")
 
 # ========================================
 # 2. PRÉPARATION
 # ========================================
 
-print("\n📊 Préparation des données...")
+print("\n Préparation des données...")
 X = dataset_df.drop('speaker_id', axis=1).values
 y = dataset_df['speaker_id'].values
 
@@ -46,7 +44,7 @@ print(f"   Agents uniques: {len(np.unique(y))}")
 label_encoder = LabelEncoder()
 y_encoded = label_encoder.fit_transform(y)
 
-print(f"\n🏷️  Encodage des labels:")
+print(f"\n  Encodage des labels:")
 print(f"   Exemple: {y[0]} → {y_encoded[0]}")
 print(f"   Classes: {len(label_encoder.classes_)}")
 
@@ -54,7 +52,7 @@ print(f"   Classes: {len(label_encoder.classes_)}")
 # 3. SPLIT (70/15/15)
 # ========================================
 
-print(f"\n✂️  Split du dataset...")
+print(f"\n  Split du dataset...")
 
 X_temp, X_test, y_temp, y_test = train_test_split(
     X, y_encoded, 
@@ -75,7 +73,7 @@ print(f"   Val:   {len(X_val):5d} ({len(X_val)/len(X)*100:.1f}%)")
 print(f"   Test:  {len(X_test):5d} ({len(X_test)/len(X)*100:.1f}%)")
 
 num_agents = len(label_encoder.classes_)
-print(f"\n⚖️  Balance:")
+print(f"\n  Balance:")
 print(f"   Train: {len(X_train) / num_agents:.1f} samples/agent")
 print(f"   Val:   {len(X_val) / num_agents:.1f} samples/agent")
 print(f"   Test:  {len(X_test) / num_agents:.1f} samples/agent")
@@ -84,7 +82,7 @@ print(f"   Test:  {len(X_test) / num_agents:.1f} samples/agent")
 # 4. NORMALISATION
 # ========================================
 
-print(f"\n📏 Normalisation StandardScaler...")
+print(f"\n Normalisation StandardScaler...")
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_val_scaled = scaler.transform(X_val)
@@ -98,12 +96,10 @@ print(f"   Std après:  {X_train_scaled.std():.3f}")
 # 5. ENTRAÎNEMENT SVM
 # ========================================
 
-print(f"\n" + "="*70)
-print("⏳ ENTRAÎNEMENT SVM (kernel RBF)...")
-print("="*70)
-print(f"⏱️  Estimation: 3-5 minutes pour {num_agents} agents")
-print(f"📊 Dataset: {len(X_train):,} × {X.shape[1]} features")
-print(f"🎯 Classes: {num_agents}\n")
+print(" ENTRAÎNEMENT SVM (kernel RBF)...")
+print(f"  Estimation: 3-5 minutes pour {num_agents} agents")
+print(f" Dataset: {len(X_train):,} × {X.shape[1]} features")
+print(f" Classes: {num_agents}\n")
 
 start_time = time.time()
 
@@ -118,13 +114,13 @@ model = SVC(
 model.fit(X_train_scaled, y_train)
 
 training_time = time.time() - start_time
-print(f"\n✅ Entraînement: {training_time:.1f}s ({training_time/60:.1f} min)")
+print(f"\n Entraînement: {training_time:.1f}s ({training_time/60:.1f} min)")
 
 # ========================================
 # 6. PRÉDICTIONS
 # ========================================
 
-print(f"\n🔮 Prédictions...")
+print(f"\n Prédictions...")
 y_train_pred = model.predict(X_train_scaled)
 y_val_pred = model.predict(X_val_scaled)
 y_test_pred = model.predict(X_test_scaled)
@@ -133,43 +129,41 @@ y_test_pred = model.predict(X_test_scaled)
 # 7. MÉTRIQUES
 # ========================================
 
-print(f"\n" + "="*70)
-print("📊 RÉSULTATS DE PERFORMANCE")
-print("="*70)
+print(" RÉSULTATS DE PERFORMANCE")
 
 train_acc = accuracy_score(y_train, y_train_pred)
 val_acc = accuracy_score(y_val, y_val_pred)
 test_acc = accuracy_score(y_test, y_test_pred)
 
-print(f"\n🎯 ACCURACY:")
+print(f"\n ACCURACY:")
 print(f"   Train: {train_acc:.4f} ({train_acc*100:.2f}%)")
 print(f"   Val:   {val_acc:.4f} ({val_acc*100:.2f}%)")
 print(f"   Test:  {test_acc:.4f} ({test_acc*100:.2f}%)")
 
-print(f"\n💡 INTERPRÉTATION:")
+print(f"\n INTERPRÉTATION:")
 if test_acc >= 0.90:
-    print("   ⭐ EXCELLENT!")
+    print(" EXCELLENT!")
 elif test_acc >= 0.85:
-    print("   ✅ TRÈS BON!")
+    print("   TRÈS BON!")
 elif test_acc >= 0.80:
-    print("   ✅ BON!")
+    print("    BON!")
 else:
-    print("   ⚠️  MOYEN")
+    print("    MOYEN")
 
 overfitting = train_acc - test_acc
-print(f"\n🔍 Écart Train-Test: {overfitting:.4f} ({overfitting*100:.2f}%)")
+print(f"\n Écart Train-Test: {overfitting:.4f} ({overfitting*100:.2f}%)")
 if overfitting < 0.05:
-    print("   ✅ Pas d'overfitting")
+    print("   Pas d'overfitting")
 elif overfitting < 0.10:
-    print("   ⚠️  Léger overfitting")
+    print("   Léger overfitting")
 else:
-    print("   ❌ Overfitting important")
+    print("   Overfitting important")
 
 # ========================================
 # 8. MATRICE DE CONFUSION
 # ========================================
 
-print(f"\n📊 Matrice de confusion...")
+print(f"\n Matrice de confusion...")
 
 cm = confusion_matrix(y_test, y_test_pred)
 cm_percent = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis] * 100
@@ -202,7 +196,7 @@ plt.tight_layout()
 
 perf_path = OUTPUT_ROOT / 'models' / 'model_performance_50agents.png'
 plt.savefig(perf_path, dpi=150, bbox_inches='tight')
-print(f"   ✅ {perf_path}")
+print(f"    {perf_path}")
 plt.show()
 plt.close()
 
@@ -210,7 +204,7 @@ plt.close()
 # 9. RAPPORT DÉTAILLÉ
 # ========================================
 
-print(f"\n📋 RAPPORT:")
+print(f"\n RAPPORT:")
 report = classification_report(y_test, y_test_pred, 
                                target_names=label_encoder.classes_,
                                output_dict=True, zero_division=0)
@@ -219,17 +213,17 @@ report_df = pd.DataFrame(report).T
 report_df = report_df[report_df.index.str.startswith('id')]
 report_df = report_df.sort_values('f1-score', ascending=False)
 
-print("\n🏆 TOP 5:")
+print("\n TOP 5:")
 print(report_df.head(5)[['precision', 'recall', 'f1-score', 'support']].to_string())
 
-print("\n⚠️  WORST 5:")
+print("\n WORST 5:")
 print(report_df.tail(5)[['precision', 'recall', 'f1-score', 'support']].to_string())
 
 # ========================================
 # 10. SAUVEGARDE
 # ========================================
 
-print(f"\n💾 Sauvegarde...")
+print(f"\n Sauvegarde...")
 
 models_dir = OUTPUT_ROOT / 'models'
 models_dir.mkdir(exist_ok=True)
@@ -242,15 +236,13 @@ joblib.dump(model, model_path)
 joblib.dump(scaler, scaler_path)
 joblib.dump(label_encoder, encoder_path)
 
-print(f"   ✅ {model_path.name}")
-print(f"   ✅ {scaler_path.name}")
-print(f"   ✅ {encoder_path.name}")
+print(f"    {model_path.name}")
+print(f"    {scaler_path.name}")
+print(f"    {encoder_path.name}")
 
-print("\n" + "="*70)
-print("🎉 SECTION 6 TERMINÉE!")
-print("="*70)
+print(" SECTION 6 TERMINÉE!")
 
-print(f"\n📊 RÉSUMÉ:")
+print(f"\n RÉSUMÉ:")
 print(f"   Agents: {len(label_encoder.classes_)}")
 print(f"   Features: {X.shape[1]}")
 print(f"   Test Accuracy: {test_acc:.2%}")
@@ -260,4 +252,3 @@ print(f"    - svm_police_radio_model.pkl")
 print(f"    - scaler.pkl")
 print(f"    - label_encoder.pkl")
 print(f"    - model_performance_50agents.png")
-print("="*70 + "\n")

@@ -139,9 +139,7 @@ def simulate_all_agents(selected_agents, agents_df,
     """
     Applique simulation avec PLUSIEURS SNR (augmentation données)
     """
-    print("\n" + "="*60)
-    print("📻 SIMULATION RADIO - AUGMENTATION DONNÉES")
-    print("="*60)
+    print(" SIMULATION RADIO - AUGMENTATION DONNÉES")
     print(f"   SNR utilisés: {snr_values} dB")
     print(f"   → {len(snr_values)}× augmentation\n")
     
@@ -189,7 +187,7 @@ def simulate_all_agents(selected_agents, agents_df,
                 total_failed += 1
                 continue
     
-    print(f"\n✅ Simulation terminée:")
+    print(f"\n Simulation terminée:")
     print(f"   ├─ Fichiers créés: {total_processed}")
     print(f"   ├─ Échecs: {total_failed}")
     print(f"   └─ Augmentation: {len(snr_values)}×")

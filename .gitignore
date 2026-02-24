@@ -50,6 +50,7 @@ ENV/
 *.mp3
 *.flac
 *.ogg
+wav/
 dataset/
 data/
 samples/
@@ -79,6 +80,8 @@ tmp_*
 *.log
 *.cache
 test.py
+output/
+reconnaisance_locuteur.zip
 
 # ========================================
 # OS

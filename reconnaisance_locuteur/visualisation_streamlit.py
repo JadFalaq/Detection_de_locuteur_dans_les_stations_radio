@@ -103,7 +103,6 @@ model, scaler, label_encoder = load_model()
 # ========================================
 
 def simulate_police_radio(audio, sr=16000, snr_db=15):
-    """Simule un canal radio P25"""
     sos = signal.butter(8, [300, 3000], 'bandpass', fs=sr, output='sos')
     audio_filtered = signal.sosfilt(sos, audio)
     
@@ -118,7 +117,6 @@ def simulate_police_radio(audio, sr=16000, snr_db=15):
     return librosa.util.normalize(audio_compressed)
 
 def extract_robust_features(audio, sr=16000):
-    """Extrait 138 features"""
     frame_length = int(0.025 * sr)
     hop_length = frame_length // 2
     
@@ -151,7 +149,6 @@ def extract_robust_features(audio, sr=16000):
     return features
 
 def predict_realtime(audio_chunk, sr, snr_db):
-    """Prédiction sur un segment audio"""
     try:
         audio_radio = simulate_police_radio(audio_chunk, sr, snr_db)
         features = extract_robust_features(audio_radio, sr)
@@ -190,12 +187,12 @@ st.markdown('<div class="main-title"> Système d\'Identification Police Radio </
 # ========================================
 
 with st.sidebar:
-    st.header("⚙️ Configuration")
+    st.header(" Configuration")
     
     # Liste des agents
     agents_list = sorted(label_encoder.classes_)
     
-    st.subheader("👤 Sélection Agent")
+    st.subheader(" Sélection Agent")
     selected_agent = st.selectbox(
         "Choisir un agent:",
         agents_list,
